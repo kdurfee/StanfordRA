@@ -66,9 +66,9 @@ def ComputeInputBW(Net,HWstyle):
             if i==0:
                 mem.append(((F*F*C*K))* val_size)
             else:
-                mem.append(((F*F*C*K))* val_size + (W*W*C))
+                mem.append(((F*F*C*K))* val_size + (W*W*C)*val_size)
         elif HWstyle is style.B:#incoming weights broadcast
-            mem.append(((F*F*C*K))* val_size)
+            mem.append((F*F*C*K)* val_size)
         elif HWstyle is style.C:#incoming weights blocked
             mem.append((F*F*C*K)/(Cores)* val_size)
         elif HWstyle is style.D:#incoming activations
@@ -96,7 +96,7 @@ def ComputePEBW(Net,HWstyle):
         elif HWstyle is style.B:#accumulation over W within cores
             mem.append(((W*W)/(PE))*K * val_size)            
         elif HWstyle is style.C:#accumulation over W within cores
-            mem.append(((W*W)/(CorePE))*K * val_size)
+            mem.append(((W*W)/(CorePE))*K/Cores * val_size)
         elif HWstyle is style.D:#Accumulation across K within cores
             mem.append((W*W) * (K/(CorePE)) * val_size)
         elif HWstyle is style.E:#Sub Accumulation across K within cores
